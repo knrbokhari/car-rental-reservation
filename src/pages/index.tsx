@@ -61,7 +61,7 @@ export default function HomePage({ data }: any) {
   const [printData, setData] = useState({});
   const [loading, setLoading] = useState(false);
   const methods = useForm<initialTypes>({
-    resolver: yupResolver(validationSchema) as Resolver<initialTypes>,
+    resolver: yupResolver(validationSchema) as unknown as Resolver<initialTypes>,
     shouldUnregister: true,
     // @ts-ignore
     defaultValues: {
