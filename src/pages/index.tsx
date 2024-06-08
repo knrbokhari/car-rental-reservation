@@ -3,6 +3,7 @@ import * as Yup from "yup";
 import { FormProvider, Resolver, useForm } from "react-hook-form";
 import Button from "../components/ui/Button";
 import { yupResolver } from "@hookform/resolvers/yup";
+import ReservationDetails from "../components/home/ReservationDetails";
 
 type initialTypes = {
   reservationID?: string;
@@ -75,7 +76,7 @@ export default function HomePage({ data }: any) {
     console.log(value);
   };
 
-  console.log(data[0]);
+  // console.log(data[0]);
   return (
     <div className="max-w-7xl w-full p-10">
       <FormProvider {...methods}>
@@ -84,6 +85,8 @@ export default function HomePage({ data }: any) {
             <h1 className="font-bold text-2xl text-black">Reservation</h1>
             <Button type="submit">Print / Download</Button>
           </div>
+
+          <ReservationDetails register={register} control={control} />
         </form>
       </FormProvider>
     </div>
