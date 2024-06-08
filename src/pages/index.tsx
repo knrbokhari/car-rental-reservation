@@ -9,8 +9,11 @@ import CustomerInformation from "../components/home/CustomerInformation";
 import VehicleInformation from "../components/home/VehicleInformation";
 import AdditionalCharges from "../components/home/AdditionalCharges";
 import ChargesSummary from "../components/home/ChargesSummary";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import useDateDifferenceCalculation from "../utils/use-date-difference-calculation";
+import { useReactToPrint } from "react-to-print";
+import Receipt from "../components/receipt";
+import Print from "../components/ui/print";
 
 type initialTypes = {
   reservationID?: string;
@@ -51,6 +54,7 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function HomePage({ data }: any) {
+  const [printData, setData] = useState({});
   const methods = useForm<initialTypes>({
     resolver: yupResolver(validationSchema) as Resolver<initialTypes>,
     shouldUnregister: true,
@@ -108,6 +112,10 @@ export default function HomePage({ data }: any) {
       setValue("days", data.days);
     }
   }, [returnDate, pickupDate]);
+  const componentRef: any = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
 
   // Create a new array with unique car types
   const uniqueCarTypes = Array.from(
@@ -141,58 +149,72 @@ export default function HomePage({ data }: any) {
   ];
 
   const onSubmit = async (value: any) => {
-    console.log(value);
+    setData({
+      ...value,
+    });
+    handlePrint();
   };
 
   return (
-    <div className="max-w-6xl w-full mt-[50px] mx-auto">
-      <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSubmit)} noValidate>
-          <div className="flex justify-between items-center mb-[35px]">
-            <h1 className="font-bold text-2xl text-black">Reservation</h1>
-            <Button type="submit">Print / Download</Button>
-          </div>
-
-          <div className="flex gap-6">
-            <div className="flex flex-col gap-5">
-              <ReservationDetails
-                register={register}
-                control={control}
-                errors={errors}
-              />
-
-              <VehicleInformation
-                control={control}
-                errors={errors}
-                vehicleTypeData={vehicleTypeData!}
-                vehicleData={vehicleData}
-              />
+    <>
+      <div className="max-w-6xl w-full mt-[50px] mx-auto">
+        <FormProvider {...methods}>
+          <form onSubmit={handleSubmit(onSubmit)} noValidate>
+            <div className="flex justify-between items-center mb-[35px]">
+              <h1 className="font-bold text-2xl text-black">Reservation</h1>
+              <Button type="submit">Print / Download</Button>
             </div>
 
-            <div className="flex flex-col gap-5">
-              <CustomerInformation register={register} errors={errors} />
+            <div className="flex gap-6">
+              <div className="flex flex-col gap-5">
+                <ReservationDetails
+                  register={register}
+                  control={control}
+                  errors={errors}
+                />
 
-              <AdditionalCharges
-                register={register}
-                data={AdditionalChargesData}
+                <VehicleInformation
+                  control={control}
+                  errors={errors}
+                  vehicleTypeData={vehicleTypeData!}
+                  vehicleData={vehicleData}
+                />
+              </div>
+
+              <div className="flex flex-col gap-5">
+                <CustomerInformation register={register} errors={errors} />
+
+                <AdditionalCharges
+                  register={register}
+                  data={AdditionalChargesData}
+                />
+              </div>
+
+              <ChargesSummary
+                AdditionalChargesData={AdditionalChargesData}
+                data={{
+                  days,
+                  weeks,
+                  vehicle,
+                  collisionDamageWaiver,
+                  liabilityInsurance,
+                  rentalTax,
+                  discount,
+                }}
               />
             </div>
-            <ChargesSummary
-              AdditionalChargesData={AdditionalChargesData}
-              data={{
-                days,
-                weeks,
-                vehicle,
-                collisionDamageWaiver,
-                liabilityInsurance,
-                rentalTax,
-                discount,
-              }}
-            />
-          </div>
-        </form>
-      </FormProvider>
-    </div>
+          </form>
+        </FormProvider>
+      </div>
+
+      <div style={{ display: "none" }}>
+        <Print
+          printData={printData}
+          AdditionalChargesData={AdditionalChargesData}
+          ref={componentRef}
+        />
+      </div>
+    </>
   );
 }
 

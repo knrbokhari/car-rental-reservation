@@ -27,6 +27,13 @@ export const calculateAll = ({ AdditionalChargesData, data }: any) => {
     additionalChargesAmount +
     (data?.rentalTax ? rentalTaxCharge : 0) -
     (data?.discount ? discountCharge : 0);
+  console.log(
+    dailyCharge,
+    weeklyCharge,
+    additionalChargesAmount,
+    data?.rentalTax ? rentalTaxCharge : 0,
+    data?.discount ? discountCharge : 0
+  );
 
   return {
     weeklyCharge,
