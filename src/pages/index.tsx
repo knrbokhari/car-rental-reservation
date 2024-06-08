@@ -4,6 +4,7 @@ import { FormProvider, Resolver, useForm } from "react-hook-form";
 import Button from "../components/ui/Button";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ReservationDetails from "../components/home/ReservationDetails";
+import CustomerInformation from "../components/home/CustomerInformation";
 
 type initialTypes = {
   reservationID?: string;
@@ -86,7 +87,8 @@ export default function HomePage({ data }: any) {
             <Button type="submit">Print / Download</Button>
           </div>
 
-          <ReservationDetails register={register} control={control} />
+          <ReservationDetails register={register} control={control} errors={errors} />
+          <CustomerInformation register={register} errors={errors} />
         </form>
       </FormProvider>
     </div>
