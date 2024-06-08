@@ -103,11 +103,11 @@ const ChargesSummary = ({ AdditionalChargesData, data }: any) => {
                 <th
                   scope="row"
                   colSpan={3}
-                  className="px-2 py-3 font-medium text-gray-900 whitespace-nowrap"
+                  className="px-2 py-3 font-bold text-gray-900 whitespace-nowrap"
                 >
                   Total
                 </th>
-                <td className="px-2 py-3 text-end">${total.toFixed(2)}</td>
+                <td className="px-2 py-3 font-bold text-end">${total.toFixed(2)}</td>
               </tr>
             </tbody>
           </table>

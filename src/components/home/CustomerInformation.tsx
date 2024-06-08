@@ -6,7 +6,7 @@ const CustomerInformation = ({ register, errors }: any) => {
     <div className="w-[345px]">
       <h2 className="font-semibold text-lg text-black">Customer Information</h2>
       <hr className="border-b border-[#5D5CFF]" />
-      <div className="mt-3 p-[10px] border border-[#DFDFFF] rounded-[5px]">
+      <div className="mt-5 p-3.5 border border-[#DFDFFF] rounded-[5px]">
         <div>
           <Input
             label="First Name"

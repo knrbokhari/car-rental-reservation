@@ -5,7 +5,7 @@ const AdditionalCharges = ({ register, data }: any) => {
     <div className="w-[345px]">
       <h2 className="font-semibold text-lg text-black">Additional Charges</h2>
       <hr className="border-b border-[#5D5CFF]" />
-      <div className="mt-3 border border-[#DFDFFF] rounded-[5px]">
+      <div className="mt-5 border border-[#DFDFFF] rounded-[5px]">
         {data?.map((charge: any) => (
           <div key={charge.id}>
             <label className="flex items-center space-x-2 p-3">

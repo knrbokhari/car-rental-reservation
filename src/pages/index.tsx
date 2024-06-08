@@ -12,7 +12,6 @@ import ChargesSummary from "../components/home/ChargesSummary";
 import { useEffect, useRef, useState } from "react";
 import useDateDifferenceCalculation from "../utils/use-date-difference-calculation";
 import { useReactToPrint } from "react-to-print";
-import Receipt from "../components/receipt";
 import Print from "../components/ui/print";
 
 type initialTypes = {
@@ -41,7 +40,12 @@ const validationSchema = Yup.object().shape({
   duration: Yup.string(),
   weeks: Yup.number(),
   days: Yup.number(),
-  discount: Yup.string(),
+  discount: Yup.number()
+    .nullable()
+    .transform((value) => (isNaN(value) ? undefined : value))
+    .typeError("Discount must be number")
+    .max(99, "Discount must be under 100")
+    .min(-0, "Discount must positive"),
   vehicleType: Yup.object().required("Vehicle type is required"),
   vehicle: Yup.object().required("Vehicle is required"),
   firstName: Yup.string().required("First name is required"),
@@ -55,6 +59,7 @@ const validationSchema = Yup.object().shape({
 
 export default function HomePage({ data }: any) {
   const [printData, setData] = useState({});
+  const [loading, setLoading] = useState(false);
   const methods = useForm<initialTypes>({
     resolver: yupResolver(validationSchema) as Resolver<initialTypes>,
     shouldUnregister: true,
@@ -112,6 +117,7 @@ export default function HomePage({ data }: any) {
       setValue("days", data.days);
     }
   }, [returnDate, pickupDate]);
+
   const componentRef: any = useRef();
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
@@ -149,10 +155,14 @@ export default function HomePage({ data }: any) {
   ];
 
   const onSubmit = async (value: any) => {
+    setLoading(true);
     setData({
       ...value,
     });
-    handlePrint();
+    setTimeout(() => {
+      handlePrint();
+    }, 1500);
+    setLoading(false);
   };
 
   return (
@@ -162,7 +172,9 @@ export default function HomePage({ data }: any) {
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
             <div className="flex justify-between items-center mb-[35px]">
               <h1 className="font-bold text-2xl text-black">Reservation</h1>
-              <Button type="submit">Print / Download</Button>
+              <Button type="submit" disabled={loading}>
+                Print / Download
+              </Button>
             </div>
 
             <div className="flex gap-6">

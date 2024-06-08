@@ -12,7 +12,7 @@ const VehicleInformation = ({
     <div className="w-[345px]">
       <h2 className="font-semibold text-lg text-black">Vehicle Information</h2>
       <hr className="border-b border-[#5D5CFF]" />
-      <div className="mt-3 p-[10px] border border-[#DFDFFF] rounded-[5px]">
+      <div className="mt-5 p-3.5 border border-[#DFDFFF] rounded-[5px]">
         <VehicleType control={control} data={vehicleTypeData} errors={errors} />
         <Vehicle control={control} data={vehicleData} errors={errors} />
       </div>

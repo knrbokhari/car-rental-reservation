@@ -46,7 +46,7 @@ const Input = React.forwardRef<HTMLInputElement, Props>(
           ref={ref}
           disabled={disabled}
           className={cn(
-            "p-2 h-10 flex border border-[#D7D7FF] items-center w-full appearance-none transition duration-300 ease-in-out text-sm font-semibold focus:outline-none focus:ring-0 rounded-[5px]",
+            "p-2 h-10 flex border border-[#D7D7FF] items-center w-full appearance-none transition duration-300 ease-in-out text-sm focus:outline-none focus:ring-0 rounded-[5px]",
             inputClassName
           )}
           {...rest}
