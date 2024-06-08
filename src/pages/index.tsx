@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import axios from "axios";
 import * as Yup from "yup";
 import { FormProvider, Resolver, useForm } from "react-hook-form";
@@ -7,6 +8,9 @@ import ReservationDetails from "../components/home/ReservationDetails";
 import CustomerInformation from "../components/home/CustomerInformation";
 import VehicleInformation from "../components/home/VehicleInformation";
 import AdditionalCharges from "../components/home/AdditionalCharges";
+import ChargesSummary from "../components/home/ChargesSummary";
+import { useEffect } from "react";
+import useDateDifferenceCalculation from "../utils/use-date-difference-calculation";
 
 type initialTypes = {
   reservationID?: string;
@@ -14,8 +18,8 @@ type initialTypes = {
   returnDate: string;
   duration: string;
   discount: string;
-  vehicleType: string;
-  vehicle: string;
+  vehicleType: any;
+  vehicle: any;
   firstName: string;
   lastName: string;
   email: string;
@@ -23,26 +27,30 @@ type initialTypes = {
   collisionDamageWaiver: boolean;
   liabilityInsurance: boolean;
   rentalTax: boolean;
+  weeks: any;
+  days: any;
 };
 
-export default function HomePage({ data }: any) {
-  const validationSchema = Yup.object().shape({
-    reservationID: Yup.string().optional(),
-    pickupDate: Yup.string().required("Pickup date is required"),
-    returnDate: Yup.string().required("Return date is required"),
-    duration: Yup.string(),
-    discount: Yup.string(),
-    vehicleType: Yup.string().required("Vehicle type is required"),
-    vehicle: Yup.string().required("Vehicle is required"),
-    firstName: Yup.string().required("First name is required"),
-    lastName: Yup.string().required("Last name is required"),
-    email: Yup.string().email("Invalid email").required("Email is required"),
-    phone: Yup.string().required("Phone is required"),
-    collisionDamageWaiver: Yup.boolean(),
-    liabilityInsurance: Yup.boolean(),
-    rentalTax: Yup.boolean(),
-  });
+const validationSchema = Yup.object().shape({
+  reservationID: Yup.string().optional(),
+  pickupDate: Yup.string().required("Pickup date is required"),
+  returnDate: Yup.string().required("Return date is required"),
+  duration: Yup.string(),
+  weeks: Yup.number(),
+  days: Yup.number(),
+  discount: Yup.string(),
+  vehicleType: Yup.object().required("Vehicle type is required"),
+  vehicle: Yup.object().required("Vehicle is required"),
+  firstName: Yup.string().required("First name is required"),
+  lastName: Yup.string().required("Last name is required"),
+  email: Yup.string().email("Invalid email").required("Email is required"),
+  phone: Yup.string().required("Phone is required"),
+  collisionDamageWaiver: Yup.boolean(),
+  liabilityInsurance: Yup.boolean(),
+  rentalTax: Yup.boolean(),
+});
 
+export default function HomePage({ data }: any) {
   const methods = useForm<initialTypes>({
     resolver: yupResolver(validationSchema) as Resolver<initialTypes>,
     shouldUnregister: true,
@@ -52,9 +60,11 @@ export default function HomePage({ data }: any) {
       pickupDate: "",
       returnDate: "",
       duration: "",
+      weeks: 0,
+      days: 0,
       discount: "",
-      vehicleType: "",
-      vehicle: "",
+      vehicleType: null,
+      vehicle: null,
       firstName: "",
       lastName: "",
       email: "",
@@ -75,7 +85,29 @@ export default function HomePage({ data }: any) {
     formState: { errors },
   } = methods;
 
+  const vehicle: any = watch("vehicle");
+  const weeks: any = watch("weeks");
+  const days: any = watch("days");
+  const discount: any = watch("discount");
+  const pickupDate: any = watch("pickupDate");
+  const returnDate: any = watch("returnDate");
   const vehicleType: any = watch("vehicleType");
+  const rentalTax: any = watch("rentalTax");
+  const collisionDamageWaiver: any = watch("collisionDamageWaiver");
+  const liabilityInsurance: any = watch("liabilityInsurance");
+
+  useEffect(() => {
+    if (returnDate && pickupDate) {
+      const data = useDateDifferenceCalculation({
+        start: pickupDate,
+        end: returnDate,
+      });
+
+      setValue("duration", data.duration);
+      setValue("weeks", data.weeks);
+      setValue("days", data.days);
+    }
+  }, [returnDate, pickupDate]);
 
   // Create a new array with unique car types
   const uniqueCarTypes = Array.from(
@@ -91,7 +123,7 @@ export default function HomePage({ data }: any) {
     (i: { type: any }) => i?.type === vehicleType?.type
   );
 
-  //
+  // Additional Charges Data
   const AdditionalChargesData = [
     {
       id: 1,
@@ -113,16 +145,16 @@ export default function HomePage({ data }: any) {
   };
 
   return (
-    <div className="max-w-7xl w-full mt-[50px]">
+    <div className="max-w-6xl w-full mt-[50px] mx-auto">
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
-          <div className="flex justify-between items-center mb-0">
+          <div className="flex justify-between items-center mb-[35px]">
             <h1 className="font-bold text-2xl text-black">Reservation</h1>
             <Button type="submit">Print / Download</Button>
           </div>
 
-          <div className="flex gap-5 ">
-            <div className="flex flex-col gap-5 mt-[35px]">
+          <div className="flex gap-6">
+            <div className="flex flex-col gap-5">
               <ReservationDetails
                 register={register}
                 control={control}
@@ -137,7 +169,7 @@ export default function HomePage({ data }: any) {
               />
             </div>
 
-            <div className="flex flex-col gap-5 mt-[35px]">
+            <div className="flex flex-col gap-5">
               <CustomerInformation register={register} errors={errors} />
 
               <AdditionalCharges
@@ -145,6 +177,18 @@ export default function HomePage({ data }: any) {
                 data={AdditionalChargesData}
               />
             </div>
+            <ChargesSummary
+              AdditionalChargesData={AdditionalChargesData}
+              data={{
+                days,
+                weeks,
+                vehicle,
+                collisionDamageWaiver,
+                liabilityInsurance,
+                rentalTax,
+                discount,
+              }}
+            />
           </div>
         </form>
       </FormProvider>

@@ -34,8 +34,8 @@ const ReservationDetails = ({ register, errors, control }: any) => {
 
         <Input
           label="Discount"
-          {...register("duration")}
-          error={errors?.duration?.message!}
+          {...register("discount")}
+          error={errors?.discount?.message!}
         />
       </div>
     </div>

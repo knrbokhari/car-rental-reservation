@@ -16,7 +16,7 @@ const Vehicle = ({ control, data = [], errors }: Props) => {
         Vehicle<span className="text-red-600">*</span>
       </Label>
       <SelectInput
-        name="vehicleType"
+        name="vehicle"
         control={control}
         getOptionLabel={(option: any) => option?.model}
         getOptionValue={(option: any) => option?.model}
