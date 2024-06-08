@@ -4,9 +4,8 @@ import Input from "../ui/Input";
 const CustomerInformation = ({ register, errors }: any) => {
   return (
     <div className="w-[345px]">
-      <div className="border-b-2 border-purple-500 mb-4 mt-6">
-        <h2 className="text-xl font-semibold mb-2">Customer Information</h2>
-      </div>
+      <h2 className="font-semibold text-lg text-black">Customer Information</h2>
+      <hr className="border-b border-[#5D5CFF]" />
       <div className="mt-3 p-[10px] border border-[#DFDFFF] rounded-[5px]">
         <div>
           <Input

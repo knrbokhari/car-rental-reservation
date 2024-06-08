@@ -6,6 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import ReservationDetails from "../components/home/ReservationDetails";
 import CustomerInformation from "../components/home/CustomerInformation";
 import VehicleInformation from "../components/home/VehicleInformation";
+import AdditionalCharges from "../components/home/AdditionalCharges";
 
 type initialTypes = {
   reservationID?: string;
@@ -90,31 +91,61 @@ export default function HomePage({ data }: any) {
     (i: { type: any }) => i?.type === vehicleType?.type
   );
 
+  //
+  const AdditionalChargesData = [
+    {
+      id: 1,
+      name: "collisionDamageWaiver",
+      label: "Collision Damage Waiver",
+      price: 9.0,
+    },
+    {
+      id: 2,
+      name: "liabilityInsurance",
+      label: "Liability Insurance",
+      price: 15.0,
+    },
+    { id: 3, name: "rentalTax", label: "Rental Tax", present: 11.5 },
+  ];
+
   const onSubmit = async (value: any) => {
     console.log(value);
   };
 
   return (
-    <div className="max-w-7xl w-full p-10">
+    <div className="max-w-7xl w-full mt-[50px]">
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center mb-0">
             <h1 className="font-bold text-2xl text-black">Reservation</h1>
             <Button type="submit">Print / Download</Button>
           </div>
 
-          <ReservationDetails
-            register={register}
-            control={control}
-            errors={errors}
-          />
-          <CustomerInformation register={register} errors={errors} />
-          <VehicleInformation
-            control={control}
-            errors={errors}
-            vehicleTypeData={vehicleTypeData!}
-            vehicleData={vehicleData}
-          />
+          <div className="flex gap-5 ">
+            <div className="flex flex-col gap-5 mt-[35px]">
+              <ReservationDetails
+                register={register}
+                control={control}
+                errors={errors}
+              />
+
+              <VehicleInformation
+                control={control}
+                errors={errors}
+                vehicleTypeData={vehicleTypeData!}
+                vehicleData={vehicleData}
+              />
+            </div>
+
+            <div className="flex flex-col gap-5 mt-[35px]">
+              <CustomerInformation register={register} errors={errors} />
+
+              <AdditionalCharges
+                register={register}
+                data={AdditionalChargesData}
+              />
+            </div>
+          </div>
         </form>
       </FormProvider>
     </div>

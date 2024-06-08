@@ -10,9 +10,8 @@ const VehicleInformation = ({
 }: any) => {
   return (
     <div className="w-[345px]">
-      <div className="border-b-2 border-purple-500 mb-4 mt-6">
-        <h2 className="text-xl font-semibold mb-2">Vehicle Information</h2>
-      </div>
+      <h2 className="font-semibold text-lg text-black">Vehicle Information</h2>
+      <hr className="border-b border-[#5D5CFF]" />
       <div className="mt-3 p-[10px] border border-[#DFDFFF] rounded-[5px]">
         <VehicleType control={control} data={vehicleTypeData} errors={errors} />
         <Vehicle control={control} data={vehicleData} errors={errors} />
