@@ -19,6 +19,7 @@
     "react-datepicker": "^6.9.0",
     "react-dom": "^18",
     "react-hook-form": "^7.51.5",
+    "react-select": "^5.8.0",
     "yup": "^1.4.0"
   },
   "devDependencies": {

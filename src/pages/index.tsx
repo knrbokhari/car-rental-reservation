@@ -5,6 +5,7 @@ import Button from "../components/ui/Button";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ReservationDetails from "../components/home/ReservationDetails";
 import CustomerInformation from "../components/home/CustomerInformation";
+import VehicleInformation from "../components/home/VehicleInformation";
 
 type initialTypes = {
   reservationID?: string;
@@ -73,11 +74,26 @@ export default function HomePage({ data }: any) {
     formState: { errors },
   } = methods;
 
+  const vehicleType: any = watch("vehicleType");
+
+  // Create a new array with unique car types
+  const uniqueCarTypes = Array.from(
+    new Set(data?.map((car: { type: any }) => car.type))
+  );
+  // Create a new array with only one object for each unique car type
+  const vehicleTypeData = uniqueCarTypes.map((type) =>
+    data?.find((car: any) => car.type === type)
+  );
+
+  // find vehicle base on vehicle type
+  const vehicleData = data?.filter(
+    (i: { type: any }) => i?.type === vehicleType?.type
+  );
+
   const onSubmit = async (value: any) => {
     console.log(value);
   };
 
-  // console.log(data[0]);
   return (
     <div className="max-w-7xl w-full p-10">
       <FormProvider {...methods}>
@@ -87,8 +103,18 @@ export default function HomePage({ data }: any) {
             <Button type="submit">Print / Download</Button>
           </div>
 
-          <ReservationDetails register={register} control={control} errors={errors} />
+          <ReservationDetails
+            register={register}
+            control={control}
+            errors={errors}
+          />
           <CustomerInformation register={register} errors={errors} />
+          <VehicleInformation
+            control={control}
+            errors={errors}
+            vehicleTypeData={vehicleTypeData!}
+            vehicleData={vehicleData}
+          />
         </form>
       </FormProvider>
     </div>
